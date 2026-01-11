@@ -1,0 +1,26 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.js";
+import projectRoutes from "./routes/projects.js";
+import { initDB } from "./db.js"; // ✅ use shared DB
+
+dotenv.config();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/auth", authRoutes);
+app.use("/projects", projectRoutes);
+
+app.get("/", (req, res) => {
+  res.json({ status: "Backend running" });
+});
+
+initDB().then(() => {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+});
